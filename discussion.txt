@@ -1,2 +1,28 @@
-# hpcHw2
-Homework 2 for hpc spring 2023
+===============================================
+Problem 2, mmult modification
+  note: -march=native doesn't work with my compiler :(
+
+----> Loop Swap <-----
+The key to the fastest loop order is in the pointer expressions for each
+  matrix. These are i+p*m, p+j*k, i+j*m. Each of i,j,k shows up twice in the
+  three expressions. A change in the 'i' index looks at the adjacent memory
+  slot twice. A change in the 'p' index looks at the adjacent memory slot once.
+  While changing 'j' results in memory jumps for both expressions. Thus, our
+  preference for fixing values should go in the order j,p,i, and the loops
+  should have j on the outside, then p, then the i loop on the inside. This
+  idea is supported by the tests that I ran.
+  
+-----> Blocking <-----
+I attempted to implement a sort of blocking for matrix multiplication. Without
+  optimization, my blocked version is much faster than the basic version. With
+  -O1, -O2, or -O3, the basic version is faster. This must mean that the
+  compiler has an easier time optimizing the basic version, and it's
+  improvements are better than what I built. 
+  
+  HOWEVER! One may notice that the
+  error between my code and the basic mmult0 is large for small matrices. I've
+  determined this is because of the NREPEATS. There's some difference between
+  mmult1 and mmult0 when it comes to multiple calls. Maybe I'm breaking a rule
+  with the pointers... I'm not sure.
+  
+  The best block size for my computer is 16. Which seems reasonable.
