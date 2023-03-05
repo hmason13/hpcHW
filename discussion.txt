@@ -1,4 +1,4 @@
-===============================================
+================================================================================
 Problem 2, mmult modification
   note: -march=native doesn't work with my compiler :(
 
@@ -19,10 +19,81 @@ I attempted to implement a sort of blocking for matrix multiplication. Without
   compiler has an easier time optimizing the basic version, and it's
   improvements are better than what I built. 
   
-  HOWEVER! One may notice that the
+HOWEVER! One may notice that the
   error between my code and the basic mmult0 is large for small matrices. I've
   determined this is because of the NREPEATS. There's some difference between
   mmult1 and mmult0 when it comes to multiple calls. Maybe I'm breaking a rule
   with the pointers... I'm not sure.
   
-  The best block size for my computer is 16. Which seems reasonable.
+I found the best block size for my computer to be 16.
+  
+================================================================================
+Problem 3, fast-sin.cpp
+
+I've added terms to the sin4_vector function. For optimization flag -O3, the
+  vectorized version runs slightly quicker than the non-vectorized version.
+  Compiling without an optimization flag (or -O0), results in the non-vectorized
+  version running significantly faster.
+  
+================================================================================
+Problem 4, pipelining, p4pipelining.cpp
+
+I've written a script using the techniques outlined in 1.7.3 of the text by
+  Eijkhout. Running the script will print to the terminal the performance for
+  the 5 different techniques. I'll also put them here:
+
+Vector size: 10; repeats: 1e8, flag: -O0
+technique #        time
+--------------------------
+    0             3.49 s
+    1             1.72 s
+    2             1.74 s
+    3             5.41 s
+    4             2.57 s
+
+Vector size: 10; repeats: 1e8, flag: -O3
+technique #        time
+--------------------------
+    0             0.11 s
+    1             0.09 s
+    2             0.09 s
+    3             0.28 s
+    4             0.09 s
+
+Vector size: 1e7; repeats: 100, flag: -O0
+technique #        time
+--------------------------
+    0             3.48 s
+    1             1.73 s
+    2             1.73 s
+    3             5.22 s
+    4             1.73 s
+
+Vector size: 1e7; repeats: 100, flag: -O3
+technique #        time
+--------------------------
+    0             0.95 s
+    1             0.48 s
+    2             0.47 s
+    3             1.42 s
+    4             0.47 s
+    
+Most surprising is the 3rd version severely underperforming in all cases.
+  This is the version with the sums unlinked from the multiplications. The 4th
+  has the sums on top of the multiplications, and it seems to recover the
+  performance. It's difficult to say why this is. Simple loop unrolling seems
+  the most effective, as it's easy to implement and performs very well. The
+  text also suggests some sort of pointer indexing that's unfamiliar to me;
+  the performance boost is very small and so I won't use this in the future.
+================================================================================
+    
+  
+
+
+
+
+
+
+
+
+
